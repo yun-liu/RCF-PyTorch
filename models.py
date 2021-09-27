@@ -60,7 +60,7 @@ class RCF(nn.Module):
         if pretrained is not None:
             self.load_state_dict(torch.load(pretrained), strict=False)
 
-    def _weights_init(self, m):
+    def _init_weights(self, m):
         if isinstance(m, nn.Conv2d):
             m.weight.data.normal_(0, 0.01)
             if m.weight.data.shape == torch.Size([1, 5, 1, 1]):
