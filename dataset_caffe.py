@@ -17,7 +17,7 @@ class BSDS_Dataset(torch.utils.data.Dataset):
             raise ValueError('Invalid split type!')
         with open(self.file_list, 'r') as f:
             self.file_list = f.readlines()
-        self.mean = np.array([104.00698793, 116.66876762, 122.67891434])
+        self.mean = np.array([104.00698793, 116.66876762, 122.67891434], dtype=np.float32)
 
     def __len__(self):
         return len(self.file_list)
