@@ -26,7 +26,6 @@ class RCF(nn.Module):
         self.pool4 = nn.MaxPool2d(2, stride=1, ceil_mode=True)
         self.act = nn.ReLU(inplace=True)
 
-        #lr 0.1 0.2 decay 1 0
         self.conv1_1_down = nn.Conv2d( 64, 21, 1)
         self.conv1_2_down = nn.Conv2d( 64, 21, 1)
         self.conv2_1_down = nn.Conv2d(128, 21, 1)
@@ -41,13 +40,11 @@ class RCF(nn.Module):
         self.conv5_2_down = nn.Conv2d(512, 21, 1)
         self.conv5_3_down = nn.Conv2d(512, 21, 1)
 
-        #lr 0.01 0.02 decay 1 0
         self.score_dsn1 = nn.Conv2d(21, 1, 1)
         self.score_dsn2 = nn.Conv2d(21, 1, 1)
         self.score_dsn3 = nn.Conv2d(21, 1, 1)
         self.score_dsn4 = nn.Conv2d(21, 1, 1)
         self.score_dsn5 = nn.Conv2d(21, 1, 1)
-        #lr 0.001 0.002 decay 1 0
         self.score_fuse = nn.Conv2d(5, 1, 1)
 
         self.weight_deconv2 = self._make_bilinear_weights( 4, 1).cuda()
@@ -58,7 +55,19 @@ class RCF(nn.Module):
         # init weights
         self.apply(self._init_weights)
         if pretrained is not None:
-            self.load_state_dict(torch.load(pretrained), strict=False)
+            #self.load_state_dict(torch.load(pretrained), strict=False)
+            import scipy.io as sio
+            vgg16 = sio.loadmat(pretrained)
+            torch_params = self.state_dict()
+
+            for k in vgg16.keys():
+                name_par = k.split('-')
+                size = len(name_par)
+                if size == 2:
+                    name_space = name_par[0] + '.' + name_par[1]
+                    data = np.squeeze(vgg16[k])
+                    torch_params[name_space] = torch.from_numpy(data)
+            self.load_state_dict(torch_params)
 
     def _init_weights(self, m):
         if isinstance(m, nn.Conv2d):
