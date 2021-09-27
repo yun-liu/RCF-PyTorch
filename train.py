@@ -40,6 +40,82 @@ logger.info('Called with args:')
 for (key, value) in vars(args).items():
     logger.info('{0:15} | {1}'.format(key, value))
 
+
+def train(args, model, train_loader, optimizer, epoch, logger):
+    batch_time = Averagvalue()
+    losses = Averagvalue()
+    model.train()
+    end = time.time()
+    counter = 0
+    for i, (image, label) in enumerate(train_loader):
+        image, label = image.cuda(), label.cuda()
+        outputs = model(image)
+        loss = torch.zeros(1).cuda()
+        for o in outputs:
+            loss = loss + Cross_entropy_loss(o, label)
+        counter += 1
+        loss = loss / args.iter_size
+        loss.backward()
+        if counter == args.iter_size:
+            optimizer.step()
+            optimizer.zero_grad()
+            counter = 0
+        # measure accuracy and record loss
+        losses.update(loss.item(), image.size(0))
+        batch_time.update(time.time() - end)
+        if i % args.print_freq == 0:
+            logger.info('Epoch: [{0}/{1}][{2}/{3}] '.format(epoch + 1, args.max_epoch, i, len(train_loader)) + \
+                        'Time {batch_time.val:.3f} (avg: {batch_time.avg:.3f}) '.format(batch_time=batch_time) + \
+                        'Loss {loss.val:f} (avg: {loss.avg:f}) '.format(loss=losses))
+        end = time.time()
+
+
+def single_scale_test(model, test_loader, test_list, save_dir):
+    model.eval()
+    if not osp.isdir(save_dir):
+        os.makedirs(save_dir)
+    for idx, image in enumerate(test_loader):
+        image = image.cuda()
+        _, _, H, W = image.shape
+        results = model(image)
+        all_res = torch.zeros((len(results), 1, H, W))
+        for i in range(len(results)):
+          all_res[i, 0, :, :] = results[i]
+        filename = osp.splitext(test_list[idx])[0]
+        torchvision.utils.save_image(1 - all_res, osp.join(save_dir, '%s.jpg' % filename))
+        fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
+        fuse_res = (fuse_res * 255).astype(np.uint8)
+        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), fuse_res)
+        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+
+
+def multi_scale_test(model, test_loader, test_list, save_dir):
+    model.eval()
+    if not osp.isdir(save_dir):
+        os.makedirs(save_dir)
+    scale = [0.5, 1, 1.5]
+    for idx, image in enumerate(test_loader):
+        in_ = image[0].numpy().transpose((1, 2, 0))
+        _, _, H, W = image.shape
+        ms_fuse = np.zeros((H, W), np.float32)
+        for k in range(len(scale)):
+            im_ = cv2.resize(in_, None, fx=scale[k], fy=scale[k], interpolation=cv2.INTER_LINEAR)
+            im_ = im_.transpose((2, 0, 1))
+            results = model(torch.unsqueeze(torch.from_numpy(im_).cuda(), 0))
+            fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
+            fuse_res = cv2.resize(fuse_res, (W, H), interpolation=cv2.INTER_LINEAR)
+            ms_fuse += fuse_res
+        ms_fuse = ms_fuse / len(scale)
+        ### rescale trick suggested by jiangjiang
+        # ms_fuse = (ms_fuse - ms_fuse.min()) / (ms_fuse.max() - ms_fuse.min())
+        filename = osp.splitext(test_list[idx])[0]
+        result_out = ((1 - ms_fuse) * 255).astype(np.uint8)
+        cv2.imwrite(osp.join(save_dir, '%s.jpg' % filename), result_out)
+        result_out_test = (ms_fuse * 255).astype(np.uint8)
+        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), result_out_test)
+        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+
+
 train_dataset = BSDS_Dataset(root=args.dataset, split='train')
 test_dataset  = BSDS_Dataset(root=args.dataset, split='test')
 train_loader  = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=4, drop_last=True, shuffle=True)
@@ -133,78 +209,3 @@ for epoch in range(args.start_epoch, args.max_epoch):
     logger.flush()
 
 logger.close()
-
-
-def train(args, model, train_loader, optimizer, epoch, logger):
-    batch_time = Averagvalue()
-    losses = Averagvalue()
-    model.train()
-    end = time.time()
-    counter = 0
-    for i, (image, label) in enumerate(train_loader):
-        image, label = image.cuda(), label.cuda()
-        outputs = model(image)
-        loss = torch.zeros(1).cuda()
-        for o in outputs:
-            loss = loss + Cross_entropy_loss(o, label)
-        counter += 1
-        loss = loss / args.iter_size
-        loss.backward()
-        if counter == args.iter_size:
-            optimizer.step()
-            optimizer.zero_grad()
-            counter = 0
-        # measure accuracy and record loss
-        losses.update(loss.item(), image.size(0))
-        batch_time.update(time.time() - end)
-        if i % args.print_freq == 0:
-            logger.info('Epoch: [{0}/{1}][{2}/{3}] '.format(epoch + 1, args.max_epoch, i, len(train_loader)) + \
-                        'Time {batch_time.val:.3f} (avg: {batch_time.avg:.3f}) '.format(batch_time=batch_time) + \
-                        'Loss {loss.val:f} (avg: {loss.avg:f}) '.format(loss=losses))
-        end = time.time()
-
-
-def single_scale_test(model, test_loader, test_list, save_dir):
-    model.eval()
-    if not osp.isdir(save_dir):
-        os.makedirs(save_dir)
-    for idx, image in enumerate(test_loader):
-        image = image.cuda()
-        _, _, H, W = image.shape
-        results = model(image)
-        all_res = torch.zeros((len(results), 1, H, W))
-        for i in range(len(results)):
-          all_res[i, 0, :, :] = results[i]
-        filename = osp.splitext(test_list[idx])[0]
-        torchvision.utils.save_image(1 - all_res, osp.join(save_dir, '%s.jpg' % filename))
-        fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
-        fuse_res = (fuse_res * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), fuse_res)
-        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
-
-
-def multi_scale_test(model, test_loader, test_list, save_dir):
-    model.eval()
-    if not osp.isdir(save_dir):
-        os.makedirs(save_dir)
-    scale = [0.5, 1, 1.5]
-    for idx, image in enumerate(test_loader):
-        in_ = image[0].numpy().transpose((1, 2, 0))
-        _, _, H, W = image.shape
-        ms_fuse = np.zeros((H, W), np.float32)
-        for k in range(len(scale)):
-            im_ = cv2.resize(in_, None, fx=scale[k], fy=scale[k], interpolation=cv2.INTER_LINEAR)
-            im_ = im_.transpose((2, 0, 1))
-            results = model(torch.unsqueeze(torch.from_numpy(im_).cuda(), 0))
-            fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
-            fuse_res = cv2.resize(fuse_res, (W, H), interpolation=cv2.INTER_LINEAR)
-            ms_fuse += fuse_res
-        ms_fuse = ms_fuse / len(scale)
-        ### rescale trick suggested by jiangjiang
-        # ms_fuse = (ms_fuse - ms_fuse.min()) / (ms_fuse.max() - ms_fuse.min())
-        filename = osp.splitext(test_list[idx])[0]
-        result_out = ((1 - ms_fuse) * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.jpg' % filename), result_out)
-        result_out_test = (ms_fuse * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), result_out_test)
-        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
