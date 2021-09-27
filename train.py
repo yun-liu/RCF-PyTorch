@@ -86,7 +86,8 @@ def single_scale_test(model, test_loader, test_list, save_dir):
         fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
         fuse_res = (fuse_res * 255).astype(np.uint8)
         cv2.imwrite(osp.join(save_dir, '%s.png' % filename), fuse_res)
-        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+        #print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+    logger.info('Running single-scale test done')
 
 
 def multi_scale_test(model, test_loader, test_list, save_dir):
@@ -113,7 +114,8 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
         cv2.imwrite(osp.join(save_dir, '%s.jpg' % filename), result_out)
         result_out_test = (ms_fuse * 255).astype(np.uint8)
         cv2.imwrite(osp.join(save_dir, '%s.png' % filename), result_out_test)
-        print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+        #print('\rRunning multi-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
+    logger.info('Running multi-scale test done')
 
 
 train_dataset = BSDS_Dataset(root=args.dataset, split='train')
@@ -204,7 +206,7 @@ for epoch in range(args.start_epoch, args.max_epoch):
             'state_dict': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'lr_scheduler': lr_scheduler.state_dict(),
-        }, filename=save_file)
+        }, save_file)
     lr_scheduler.step() # will adjust learning rate
     logger.flush()
 
