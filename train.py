@@ -7,7 +7,7 @@ import time
 import torch
 from torch.utils.data import DataLoader
 import torchvision
-from data_loader import BSDS_Dataset
+from dataset import BSDS_Dataset
 from models import RCF
 from utils import Logger, Averagvalue, Cross_entropy_loss
 
