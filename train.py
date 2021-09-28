@@ -7,7 +7,7 @@ import time
 import torch
 from torch.utils.data import DataLoader
 import torchvision
-from dataset_caffe import BSDS_Dataset
+from dataset import BSDS_Dataset
 from models import RCF
 from utils import Logger, Averagvalue, Cross_entropy_loss
 
@@ -125,7 +125,7 @@ test_loader   = DataLoader(test_dataset, batch_size=args.batch_size, num_workers
 test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
 assert len(test_list) == len(test_loader)
 
-model = RCF(pretrained='vgg16convs.mat').cuda()
+model = RCF(pretrained='vgg16-397923af.pth').cuda()
 parameters = {'conv1-4.weight': [], 'conv1-4.bias': [], 'conv5.weight': [], 'conv5.bias': [],
     'conv_down_1-5.weight': [], 'conv_down_1-5.bias': [], 'score_dsn_1-5.weight': [],
     'score_dsn_1-5.bias': [], 'score_fuse.weight': [], 'score_fuse.bias': []}

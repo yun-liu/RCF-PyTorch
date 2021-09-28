@@ -55,19 +55,7 @@ class RCF(nn.Module):
         # init weights
         self.apply(self._init_weights)
         if pretrained is not None:
-            #self.load_state_dict(torch.load(pretrained), strict=False)
-            import scipy.io as sio
-            vgg16 = sio.loadmat(pretrained)
-            torch_params = self.state_dict()
-
-            for k in vgg16.keys():
-                name_par = k.split('-')
-                size = len(name_par)
-                if size == 2:
-                    name_space = name_par[0] + '.' + name_par[1]
-                    data = np.squeeze(vgg16[k])
-                    torch_params[name_space] = torch.from_numpy(data)
-            self.load_state_dict(torch_params)
+            self.load_state_dict(torch.load(pretrained), strict=False)
 
     def _init_weights(self, m):
         if isinstance(m, nn.Conv2d):
