@@ -208,6 +208,5 @@ for epoch in range(args.start_epoch, args.max_epoch):
             'lr_scheduler': lr_scheduler.state_dict(),
         }, save_file)
     lr_scheduler.step() # will adjust learning rate
-    logger.flush()
 
 logger.close()
