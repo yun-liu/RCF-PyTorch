@@ -84,8 +84,8 @@ def single_scale_test(model, test_loader, test_list, save_dir):
         filename = osp.splitext(test_list[idx])[0]
         torchvision.utils.save_image(1 - all_res, osp.join(save_dir, '%s.jpg' % filename))
         fuse_res = torch.squeeze(results[-1].detach()).cpu().numpy()
-        fuse_res = (fuse_res * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), fuse_res)
+        fuse_res = ((1 - fuse_res) * 255).astype(np.uint8)
+        cv2.imwrite(osp.join(save_dir, '%s_ss.png' % filename), fuse_res)
         #print('\rRunning single-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
     logger.info('Running single-scale test done')
 
@@ -110,10 +110,8 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
         ### rescale trick suggested by jiangjiang
         # ms_fuse = (ms_fuse - ms_fuse.min()) / (ms_fuse.max() - ms_fuse.min())
         filename = osp.splitext(test_list[idx])[0]
-        result_out = ((1 - ms_fuse) * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.jpg' % filename), result_out)
-        result_out_test = (ms_fuse * 255).astype(np.uint8)
-        cv2.imwrite(osp.join(save_dir, '%s.png' % filename), result_out_test)
+        ms_fuse = ((1 - ms_fuse) * 255).astype(np.uint8)
+        cv2.imwrite(osp.join(save_dir, '%s_ms.png' % filename), ms_fuse)
         #print('\rRunning multi-scale test [%d/%d]' % (idx + 1, len(test_loader)), end='')
     logger.info('Running multi-scale test done')
 
@@ -125,7 +123,7 @@ test_loader   = DataLoader(test_dataset, batch_size=args.batch_size, num_workers
 test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
 assert len(test_list) == len(test_loader)
 
-model = RCF(pretrained='vgg16-397923af.pth').cuda()
+model = RCF(pretrained='vgg16convs.mat').cuda()
 parameters = {'conv1-4.weight': [], 'conv1-4.bias': [], 'conv5.weight': [], 'conv5.bias': [],
     'conv_down_1-5.weight': [], 'conv_down_1-5.bias': [], 'score_dsn_1-5.weight': [],
     'score_dsn_1-5.bias': [], 'score_fuse.weight': [], 'score_fuse.bias': []}
@@ -194,10 +192,9 @@ if args.resume is not None:
 for epoch in range(args.start_epoch, args.max_epoch):
     logger.info('Performing initial testing...')
     train(args, model, train_loader, optimizer, epoch, logger)
-    save_dir_ss = osp.join(args.save_dir, 'epoch%d-test-ss' % epoch)
-    save_dir_ms = osp.join(args.save_dir, 'epoch%d-test-ms' % epoch)
-    single_scale_test(model, test_loader, test_list, save_dir_ss)
-    multi_scale_test(model, test_loader, test_list, save_dir_ms)
+    save_dir = osp.join(args.save_dir, 'epoch%d-test' % epoch)
+    single_scale_test(model, test_loader, test_list, save_dir)
+    multi_scale_test(model, test_loader, test_list, save_dir)
     # Save checkpoint
     save_file = osp.join(args.save_dir, 'checkpoint_epoch{}.pth'.format(epoch))
     torch.save({

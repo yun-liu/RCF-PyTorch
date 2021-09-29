@@ -1,4 +1,5 @@
 __pycache__
 *.pth
+*.mat
 data/
 results/

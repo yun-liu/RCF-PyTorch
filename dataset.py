@@ -17,8 +17,7 @@ class BSDS_Dataset(torch.utils.data.Dataset):
             raise ValueError('Invalid split type!')
         with open(self.file_list, 'r') as f:
             self.file_list = f.readlines()
-        self.mean = np.array([0.406, 0.456, 0.485], dtype=np.float32)
-        self.std  = np.array([0.225, 0.224, 0.229], dtype=np.float32)
+        self.mean = np.array([104.00698793, 116.66876762, 122.67891434], dtype=np.float32)
 
     def __len__(self):
         return len(self.file_list)
@@ -37,8 +36,7 @@ class BSDS_Dataset(torch.utils.data.Dataset):
 
         img = cv2.imread(osp.join(self.root, img_file))
         img = np.array(img, dtype=np.float32)
-        img = (img / 255 - self.mean) / self.std
-        img = img[:, :, ::-1].copy().transpose((2, 0, 1))
+        img = (img - self.mean).transpose((2, 0, 1))
 
         if self.split == 'train':
             return img, label
