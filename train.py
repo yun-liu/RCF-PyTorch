@@ -192,11 +192,11 @@ if args.resume is not None:
 for epoch in range(args.start_epoch, args.max_epoch):
     logger.info('Performing initial testing...')
     train(args, model, train_loader, optimizer, epoch, logger)
-    save_dir = osp.join(args.save_dir, 'epoch%d-test' % epoch)
+    save_dir = osp.join(args.save_dir, 'epoch%d-test' % (epoch + 1))
     single_scale_test(model, test_loader, test_list, save_dir)
     multi_scale_test(model, test_loader, test_list, save_dir)
     # Save checkpoint
-    save_file = osp.join(args.save_dir, 'checkpoint_epoch{}.pth'.format(epoch))
+    save_file = osp.join(args.save_dir, 'checkpoint_epoch{}.pth'.format(epoch + 1))
     torch.save({
             'epoch': epoch,
             'args': args,
