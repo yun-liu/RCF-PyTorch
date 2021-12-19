@@ -34,12 +34,19 @@ If you are using the code/model/data provided here in a publication, please cons
     wget http://mftp.mmcheng.net/liuyun/rcf/data/PASCAL.tar.gz
     ```
     
-4. Modify the path to the dataset and the path to the output folder in `train.sh`, and then, run the following command for running the code:
+4. Modify the path to the output folder in `train.sh`, and then, run the following command to start the training:
     ```
     ./train.sh
     ```
     
-For more information about RCF, please refer to this page: [yun-liu/RCF](https://github.com/yun-liu/RCF)
+For more information about RCF and edge quality evaluation, please refer to this page: [yun-liu/RCF](https://github.com/yun-liu/RCF)
 
-### We have released the code and data for plotting the edge PR curves of many existing edge detectors [here](https://github.com/yun-liu/plot-edge-pr-curves).
+### Edge PR Curves
 
+We have released the code and data for plotting the edge PR curves of many existing edge detectors [here](https://github.com/yun-liu/plot-edge-pr-curves).
+
+### Acknowledgements
+
+[1] [balajiselvaraj1601/RCF_Pytorch_Updated](https://github.com/balajiselvaraj1601/RCF_Pytorch_Updated)
+
+[2] [meteorshowers/RCF-pytorch](https://github.com/meteorshowers/RCF-pytorch)
