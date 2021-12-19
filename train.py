@@ -26,7 +26,7 @@ parser.add_argument('--print-freq', default=200, type=int, help='print frequency
 parser.add_argument('--gpu', default='0', type=str, help='GPU ID')
 parser.add_argument('--resume', default=None, type=str, help='path to latest checkpoint')
 parser.add_argument('--save-dir', help='output folder', default='results/RCF')
-parser.add_argument('--dataset', help='root folder of dataset', default='data/HED-BSDS')
+parser.add_argument('--dataset', help='root folder of dataset', default='data')
 args = parser.parse_args()
 
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID' # see issue #152
@@ -117,7 +117,7 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
 
 
 train_dataset = BSDS_Dataset(root=args.dataset, split='train')
-test_dataset  = BSDS_Dataset(root=args.dataset, split='test')
+test_dataset  = BSDS_Dataset(root=osp.join(args.dataset, 'HED-BSDS'), split='test')
 train_loader  = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=4, drop_last=True, shuffle=True)
 test_loader   = DataLoader(test_dataset, batch_size=args.batch_size, num_workers=4, drop_last=True, shuffle=False)
 test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
