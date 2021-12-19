@@ -29,7 +29,7 @@ parser.add_argument('--save-dir', help='output folder', default='results/RCF')
 parser.add_argument('--dataset', help='root folder of dataset', default='data')
 args = parser.parse_args()
 
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID' # see issue #152
+os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
 if not osp.isdir(args.save_dir):
@@ -179,13 +179,13 @@ lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.stepsiz
 
 if args.resume is not None:
     if osp.isfile(args.resume):
-        logger.info("=> loading checkpoint '{}'".format(args.resume))
+        logger.info("=> loading checkpoint from '{}'".format(args.resume))
         checkpoint = torch.load(args.resume)
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
         lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
         args.start_epoch = checkpoint['epoch'] + 1
-        logger.info("=> loaded checkpoint '{}'".format(args.resume))
+        logger.info("=> checkpoint loaded")
     else:
         logger.info("=> no checkpoint found at '{}'".format(args.resume))
 
