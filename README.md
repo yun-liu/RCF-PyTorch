@@ -26,7 +26,7 @@ If you are using the code/model/data provided here in a publication, please cons
 
 2. Download [the ImageNet-pretrained model](https://drive.google.com/file/d/1szqDNG3dUO6BM3l6YBuC9vWp16n48-cK/view?usp=sharing), and put it into the `$ROOT_DIR` folder.
 
-3. Download the datasets you need as below, and extract these datasets to the `$ROOT_DIR/data/` folder.
+3. Download the datasets as below, and extract these datasets to the `$ROOT_DIR/data/` folder.
 
     ```
     wget http://mftp.mmcheng.net/liuyun/rcf/data/bsds_pascal_train_pair.lst
