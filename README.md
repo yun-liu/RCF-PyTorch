@@ -34,9 +34,9 @@ If you are using the code/model/data provided here in a publication, please cons
     wget http://mftp.mmcheng.net/liuyun/rcf/data/PASCAL.tar.gz
     ```
     
-4. Modify the path to the output folder in `train.sh`, and then, run the following command to start the training:
+4. Run the following command to start the training:
     ```
-    ./train.sh
+    python train.py --save-dir /path/to/output/directory/
     ```
     
 For more information about RCF and edge quality evaluation, please refer to this page: [yun-liu/RCF](https://github.com/yun-liu/RCF)
