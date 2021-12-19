@@ -17,7 +17,7 @@ If you are using the code/model/data provided here in a publication, please cons
       publisher={IEEE}
     }
     
-### Training and Testing
+### Training
 
 1. Clone the RCF repository
     ```
@@ -39,6 +39,16 @@ If you are using the code/model/data provided here in a publication, please cons
     python train.py --save-dir /path/to/output/directory/
     ```
     
+### Testing
+
+1. Download the pretrained model ([BSDS500+PASCAL](https://drive.google.com/file/d/1oxlHQCM4mm5zhHzmE7yho_oToU5Ucckk/view?usp=sharing)), and put it into the `$ROOT_DIR` folder.
+
+2. Run the following command to start the testing:
+    ```
+    python test.py --checkpoint bsds500_pascal_model.pth --save-dir /path/to/output/directory/
+    ```
+   This pretrained model should achieve an ODS F-measure of 0.812.
+
 For more information about RCF and edge quality evaluation, please refer to this page: [yun-liu/RCF](https://github.com/yun-liu/RCF)
 
 ### Edge PR Curves
