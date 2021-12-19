@@ -32,7 +32,6 @@ If you are using the code/model/data provided here in a publication, please cons
     wget http://mftp.mmcheng.net/liuyun/rcf/data/bsds_pascal_train_pair.lst
     wget http://mftp.mmcheng.net/liuyun/rcf/data/HED-BSDS.tar.gz
     wget http://mftp.mmcheng.net/liuyun/rcf/data/PASCAL.tar.gz
-    wget http://mftp.mmcheng.net/liuyun/rcf/data/NYUD.tar.gz
     ```
     
 4. Modify the path to the dataset and the path to the output folder in `train.sh`, and then, run the following command for running the code:
