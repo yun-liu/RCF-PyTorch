@@ -19,7 +19,7 @@ If you are using the code/model/data provided here in a publication, please cons
     
 ### Training
 
-1. Clone the RCF repository
+1. Clone the RCF repository:
     ```
     git clone https://github.com/yun-liu/RCF-PyTorch.git
     ```
