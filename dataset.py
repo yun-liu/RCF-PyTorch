@@ -5,12 +5,12 @@ import os.path as osp
 
 
 class BSDS_Dataset(torch.utils.data.Dataset):
-    def __init__(self, root='data/HED-BSDS', split='train', transform=False):
+    def __init__(self, root='data/HED-BSDS', split='test', transform=False):
         self.root = root
         self.split = split
         self.transform = transform
         if self.split == 'train':
-            self.file_list = osp.join(self.root, 'train_pair.lst')
+            self.file_list = osp.join(self.root, 'bsds_pascal_train_pair.lst')
         elif self.split == 'test':
             self.file_list = osp.join(self.root, 'test.lst')
         else:
