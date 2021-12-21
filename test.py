@@ -10,7 +10,7 @@ from dataset import BSDS_Dataset
 from models import RCF
 
 
-parser = argparse.ArgumentParser(description='PyTorch Training')
+parser = argparse.ArgumentParser(description='PyTorch Testing')
 parser.add_argument('--gpu', default='0', type=str, help='GPU ID')
 parser.add_argument('--checkpoint', default=None, type=str, help='path to latest checkpoint')
 parser.add_argument('--save-dir', help='output folder', default='results/RCF')
