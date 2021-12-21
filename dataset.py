@@ -6,6 +6,7 @@ import os.path as osp
 
 class BSDS_Dataset(torch.utils.data.Dataset):
     def __init__(self, root='data/HED-BSDS', split='test', transform=False):
+        super(BSDS_Dataset, self).__init__()
         self.root = root
         self.split = split
         self.transform = transform
