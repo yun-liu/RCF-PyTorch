@@ -119,7 +119,7 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
 train_dataset = BSDS_Dataset(root=args.dataset, split='train')
 test_dataset  = BSDS_Dataset(root=osp.join(args.dataset, 'HED-BSDS'), split='test')
 train_loader  = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=4, drop_last=True, shuffle=True)
-test_loader   = DataLoader(test_dataset, batch_size=args.batch_size, num_workers=4, drop_last=True, shuffle=False)
+test_loader   = DataLoader(test_dataset, batch_size=args.batch_size, num_workers=4, drop_last=False, shuffle=False)
 test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
 assert len(test_list) == len(test_loader)
 
