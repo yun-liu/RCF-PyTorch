@@ -10,20 +10,6 @@ from dataset import BSDS_Dataset
 from models import RCF
 
 
-parser = argparse.ArgumentParser(description='PyTorch Testing')
-parser.add_argument('--gpu', default='0', type=str, help='GPU ID')
-parser.add_argument('--checkpoint', default=None, type=str, help='path to latest checkpoint')
-parser.add_argument('--save-dir', help='output folder', default='results/RCF')
-parser.add_argument('--dataset', help='root folder of dataset', default='data/HED-BSDS')
-args = parser.parse_args()
-
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-
-if not osp.isdir(args.save_dir):
-  os.makedirs(args.save_dir)
-
-
 def single_scale_test(model, test_loader, test_list, save_dir):
     model.eval()
     if not osp.isdir(save_dir):
@@ -70,21 +56,35 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
     print('Running multi-scale test done')
 
 
-test_dataset  = BSDS_Dataset(root=args.dataset, split='test')
-test_loader   = DataLoader(test_dataset, batch_size=1, num_workers=4, drop_last=False, shuffle=False)
-test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
-assert len(test_list) == len(test_loader)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='PyTorch Testing')
+    parser.add_argument('--gpu', default='0', type=str, help='GPU ID')
+    parser.add_argument('--checkpoint', default=None, type=str, help='path to latest checkpoint')
+    parser.add_argument('--save-dir', help='output folder', default='results/RCF')
+    parser.add_argument('--dataset', help='root folder of dataset', default='data/HED-BSDS')
+    args = parser.parse_args()
 
-model = RCF().cuda()
+    os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
-if osp.isfile(args.checkpoint):
-    print("=> loading checkpoint from '{}'".format(args.checkpoint))
-    checkpoint = torch.load(args.checkpoint)
-    model.load_state_dict(checkpoint)
-    print("=> checkpoint loaded")
-else:
-    print("=> no checkpoint found at '{}'".format(args.checkpoint))
+    if not osp.isdir(args.save_dir):
+        os.makedirs(args.save_dir)
+  
+    test_dataset  = BSDS_Dataset(root=args.dataset, split='test')
+    test_loader   = DataLoader(test_dataset, batch_size=1, num_workers=1, drop_last=False, shuffle=False)
+    test_list = [osp.split(i.rstrip())[1] for i in test_dataset.file_list]
+    assert len(test_list) == len(test_loader)
 
-print('Performing the testing...')
-single_scale_test(model, test_loader, test_list, args.save_dir)
-multi_scale_test(model, test_loader, test_list, args.save_dir)
+    model = RCF().cuda()
+
+    if osp.isfile(args.checkpoint):
+        print("=> loading checkpoint from '{}'".format(args.checkpoint))
+        checkpoint = torch.load(args.checkpoint)
+        model.load_state_dict(checkpoint)
+        print("=> checkpoint loaded")
+    else:
+        print("=> no checkpoint found at '{}'".format(args.checkpoint))
+
+    print('Performing the testing...')
+    single_scale_test(model, test_loader, test_list, args.save_dir)
+    multi_scale_test(model, test_loader, test_list, args.save_dir)
