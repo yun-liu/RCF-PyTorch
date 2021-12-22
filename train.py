@@ -107,7 +107,7 @@ def multi_scale_test(model, test_loader, test_list, save_dir):
             fuse_res = cv2.resize(fuse_res, (W, H), interpolation=cv2.INTER_LINEAR)
             ms_fuse += fuse_res
         ms_fuse = ms_fuse / len(scale)
-        ### rescale trick suggested by jiangjiang
+        ### rescale trick
         # ms_fuse = (ms_fuse - ms_fuse.min()) / (ms_fuse.max() - ms_fuse.min())
         filename = osp.splitext(test_list[idx])[0]
         ms_fuse = ((1 - ms_fuse) * 255).astype(np.uint8)
