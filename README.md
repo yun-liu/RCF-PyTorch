@@ -55,6 +55,12 @@ For more information about RCF and edge quality evaluation, please refer to this
 
 We have released the code and data for plotting the edge PR curves of many existing edge detectors [here](https://github.com/yun-liu/plot-edge-pr-curves).
 
+### RCF based on other frameworks 
+
+Caffe based RCF: [yun-liu/RCF](https://github.com/yun-liu/RCF)
+
+Jittor based RCF: [yun-liu/RCF-Jittor](https://github.com/yun-liu/RCF-Jittor)
+
 ### Acknowledgements
 
 [1] [balajiselvaraj1601/RCF_Pytorch_Updated](https://github.com/balajiselvaraj1601/RCF_Pytorch_Updated)
