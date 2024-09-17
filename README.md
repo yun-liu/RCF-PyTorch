@@ -16,6 +16,16 @@ If you are using the code/model/data provided here in a publication, please cons
       year={2019},
       publisher={IEEE}
     }
+
+    @article{liu2022semantic,
+      title={Semantic edge detection with diverse deep supervision},
+      author={Liu, Yun and Cheng, Ming-Ming and Fan, Deng-Ping and Zhang, Le and Bian, JiaWang and Tao, Dacheng},
+      journal={International Journal of Computer Vision},
+      volume={130},
+      pages={179--198},
+      year={2022},
+      publisher={Springer}
+    }
     
 ### Training
 
