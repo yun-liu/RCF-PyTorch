@@ -49,6 +49,10 @@ def Cross_entropy_loss(prediction, label):
 
     mask[mask == 1] = 1.0 * num_negative / (num_positive + num_negative)
     mask[mask == 0] = 1.1 * num_positive / (num_positive + num_negative)
-    mask[mask == 2] = 0
+    # mask[mask == 2] = 0
+    selected_idx = mask != 2
+    prediction = prediction[selected_idx]
+    label = label[selected_idx]
+    mask = mask[selected_idx]
     cost = F.binary_cross_entropy(prediction, label, weight=mask, reduce=False)
     return torch.sum(cost)
