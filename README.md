@@ -34,7 +34,7 @@ If you are using the code/model/data provided here in a publication, please cons
     git clone https://github.com/yun-liu/RCF-PyTorch.git
     ```
 
-2. Download the ImageNet-pretrained model ([Google Drive](https://drive.google.com/file/d/1szqDNG3dUO6BM3l6YBuC9vWp16n48-cK/view?usp=sharing) or [Baidu Yun](https://pan.baidu.com/s/1vfntX-cTKnk58atNW5T1lA?pwd=g5af)), and put it into the `$ROOT_DIR` folder.
+2. Download the ImageNet-pretrained model ([GitHub](https://github.com/yun-liu/RCF-PyTorch/releases/download/v1.0/vgg16convs.mat) or [Baidu Yun](https://pan.baidu.com/s/1vfntX-cTKnk58atNW5T1lA?pwd=g5af)), and put it into the `$ROOT_DIR` folder.
 
 3. Download the datasets as below, and extract these datasets to the `$ROOT_DIR/data/` folder.
 
@@ -51,7 +51,7 @@ If you are using the code/model/data provided here in a publication, please cons
     
 ### Testing
 
-1. Download the pretrained model (BSDS500+PASCAL: [Google Drive](https://drive.google.com/file/d/1oxlHQCM4mm5zhHzmE7yho_oToU5Ucckk/view?usp=sharing) or [Baidu Yun](https://pan.baidu.com/s/1Tpf_-dIxHmKwH5IeClt0Ng?pwd=03ad)), and put it into the `$ROOT_DIR` folder.
+1. Download the pretrained model (BSDS500+PASCAL: [GitHub](https://github.com/yun-liu/RCF-PyTorch/releases/download/v1.0/bsds500_pascal_model.pth) or [Baidu Yun](https://pan.baidu.com/s/1Tpf_-dIxHmKwH5IeClt0Ng?pwd=03ad)), and put it into the `$ROOT_DIR` folder.
 
 2. Run the following command to start the testing:
     ```
